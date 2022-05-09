@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const Restaurant = require('./models/restaurant');
 
-
+// problem with ejs-mate
 
 mongoose.connect('mongodb://localhost:27017/yelp-restaurant', {
     useNewUrlParser: true,
