@@ -1,7 +1,7 @@
 
 const express = require('express');
 const path = require('path');
-const ejsMate = require('ejs-mate');
+const ejsMate = require('ejs-mate'); 
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const Restaurant = require('./models/restaurant');
@@ -72,8 +72,8 @@ app.put('/restaurants/:id', async (req, res) => {
     res.redirect(`/restaurants/${restaurants._id}`)
 })
 
-app.delete('/restaurants/:id', async(req,res)=>{
-    const {id} = req.params;
+app.delete('/restaurants/:id', async (req, res) => {
+    const { id } = req.params;
     const restaurants = await Restaurant.findByIdAndDelete(id);
     res.redirect('/restaurants');
 });

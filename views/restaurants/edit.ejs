@@ -1,26 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit</title>
-</head>
-<body>
-    <h1>Edit Restaurant</h1>
+<% layout('/layouts/boilerplate') -%>
+
+<div class="row">
+  <h1 class="text-center">Edit Restaurant</h1>
+  <div class="col-6 offset-3">
     <form action="/restaurants/<%= restaurants._id %>?_method=PUT" method="POST">
-        <div>
-            <label for="title">Title</label>
-            <input type="text" id="title" name="restaurant[title]" value="<%=restaurants.title%>">
-        </div>
-        <br>
-        <div>
-            <label for="location">Location</label>
-            <input type="text" id="location" name="restaurant[location]" value="<%= restaurants.location %> ">
-        </div>
-        <br>
-        <button>Update Restaurant</button>
+      <div class="mb-3">
+        <label class="form-label" for="title">Title</label>
+        <input
+          class="form-control"
+          type="text"
+          id="title"
+          name="restaurant[title]"
+          value="<%=restaurants.title%>"
+
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="location">Location</label>
+        <input
+          class="form-control"
+          type="text"
+          id="location"
+          name="restaurant[location]"
+          value="<%= restaurants.location %> "
+
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="image">Image Url</label>
+        <input
+          class="form-control"
+          type="text"
+          id="image"
+          name="restaurant[image]"
+          value="<%= restaurants.image %> "
+
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="price">Restaurant Price</label>
+
+      <div class="input-group">
+        <span class="input-group-text" id="price-label">$</span>
+        <input type="text" class="form-control" id="price"   placeholder="0.00" aria-label="price" aria-describedby="price-label" name="restaurant[price]" value="<%= restaurants.price %> "
+        >
+      </div>
+    </div>
+      <div class="mb-3">
+        <label class="form-label" for="description">Description</label>
+        <textarea
+          class="form-control"
+          type="text"
+          id="description"
+          name="restaurant[description]"
+        /> <%= restaurants.description %>  </textarea>
+      </div>
+      <div class="mb-3">
+        <button class="btn btn-info">Update Restaurant</button>
+      </div>
     </form>
-    <a href="/restaurants ">Go Back</a>
-</body>
-</html>
+    <a href="/restaurants/<%= restaurants._id %> ">Back To Restaurants</a>
+  </div>
+</div>
+
