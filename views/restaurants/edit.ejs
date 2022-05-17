@@ -3,7 +3,7 @@
 <div class="row">
   <h1 class="text-center">Edit Restaurant</h1>
   <div class="col-6 offset-3">
-    <form action="/restaurants/<%= restaurants._id %>?_method=PUT" method="POST">
+    <form action="/restaurants/<%= restaurants._id %>?_method=PUT" method="POST" novalidate class="validateForm">
       <div class="mb-3">
         <label class="form-label" for="title">Title</label>
         <input
@@ -12,8 +12,9 @@
           id="title"
           name="restaurant[title]"
           value="<%=restaurants.title%>"
-
+          required
         />
+        <div class="valid-feedback">Good!</div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="location">Location</label>
@@ -23,9 +24,11 @@
           id="location"
           name="restaurant[location]"
           value="<%= restaurants.location %> "
-
+          required
         />
+        <div class="valid-feedback">Good!</div>
       </div>
+
       <div class="mb-3">
         <label class="form-label" for="image">Image Url</label>
         <input
@@ -34,17 +37,22 @@
           id="image"
           name="restaurant[image]"
           value="<%= restaurants.image %> "
-
+          required
         />
+        <div class="valid-feedback">Good!</div>
       </div>
+
       <div class="mb-3">
         <label class="form-label" for="price">Restaurant Price</label>
 
       <div class="input-group">
         <span class="input-group-text" id="price-label">$</span>
         <input type="text" class="form-control" id="price"   placeholder="0.00" aria-label="price" aria-describedby="price-label" name="restaurant[price]" value="<%= restaurants.price %> "
+        required
         >
+        <div class="valid-feedback">Good!</div>
       </div>
+
     </div>
       <div class="mb-3">
         <label class="form-label" for="description">Description</label>
@@ -53,8 +61,11 @@
           type="text"
           id="description"
           name="restaurant[description]"
-        /> <%= restaurants.description %>  </textarea>
+          required
+        /><%= restaurants.description %></textarea>
+        <div class="valid-feedback">Good Description!</div>
       </div>
+    </div>
       <div class="mb-3">
         <button class="btn btn-info">Update Restaurant</button>
       </div>
