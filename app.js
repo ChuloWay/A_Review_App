@@ -45,6 +45,7 @@ const serverValidation = (req,res,next) =>{
 }
 
 
+
 app.get('/', (req, res) => {
     res.send('Hello GUYS');
 })
