@@ -103,11 +103,11 @@ app.put('/restaurants/:id', validateRestaurant, handleAsync(async (req, res) => 
 
 app.delete('/restaurants/:id', handleAsync(async (req, res) => {
     const { id } = req.params;
-    const restaurants = await Restaurant.findByIdAndDelete(id);
+    await Restaurant.findByIdAndDelete(id);
     res.redirect('/restaurants');
 }));
 
-app.post('/restaurants/:id/reviews',validateReview, handleAsync(async (req, res) => {
+app.post('/restaurants/:id/reviews', validateReview, handleAsync(async (req, res) => {
     const { id } = req.params;
     const restaurant = await Restaurant.findById(id);
     const review = new Review(req.body.review)
@@ -115,6 +115,14 @@ app.post('/restaurants/:id/reviews',validateReview, handleAsync(async (req, res)
     await review.save();
     await restaurant.save();
     res.redirect(`/restaurants/${id}`)
+}))
+
+app.delete('/restaurants/:id/reviews/:reviewId', handleAsync(async (req, res) => {
+    const { id, reviewId } = req.params;
+    await Restaurant.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/restaurants/${id}`);
+
 }))
 
 
