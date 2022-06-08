@@ -81,7 +81,7 @@ app.post('/restaurants', validateRestaurant, handleAsync(async (req, res, next) 
 
 app.get('/restaurants/:id', handleAsync(async (req, res) => {
     const { id } = req.params;
-    const restaurants = await Restaurant.findById(req.params.id);
+    const restaurants = await Restaurant.findById(req.params.id).populate('reviews');
     res.render('restaurants/show', { restaurants })
 }));
 
