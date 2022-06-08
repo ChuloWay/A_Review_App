@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 const ejsMate = require('ejs-mate');
 const joi = require('joi');
-const { restaurantSchema } = require('./schemas');
+const { restaurantSchema, reviewSchema } = require('./schemas');
 const handleAsync = require('./Utility/handleAsync');
 const ExpressError = require('./Utility/ExpressError');
 const mongoose = require('mongoose');
@@ -34,8 +34,18 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
-const serverValidation = (req, res, next) => {
+const validateRestaurant = (req, res, next) => {
     const { error } = restaurantSchema.validate(req.body);
+
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400)
+    } else {
+        next();
+    }
+}
+const validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body);
 
     if (error) {
         const msg = error.details.map(el => el.message).join(',')
@@ -62,7 +72,7 @@ app.get('/restaurants/new', (req, res) => {
     res.render('restaurants/new')
 })
 
-app.post('/restaurants', serverValidation, handleAsync(async (req, res, next) => {
+app.post('/restaurants', validateRestaurant, handleAsync(async (req, res, next) => {
     // if(!req.body.campground) throw new ExpressError('Hey Invalid Data', 400)
     const restaurants = new Restaurant(req.body.restaurant);
     await restaurants.save();
@@ -83,7 +93,7 @@ app.get('/restaurants/:id/edit', handleAsync(async (req, res) => {
 }))
 
 
-app.put('/restaurants/:id', serverValidation, handleAsync(async (req, res) => {
+app.put('/restaurants/:id', validateRestaurant, handleAsync(async (req, res) => {
     const { id } = req.params;
     const restaurants = await Restaurant.findByIdAndUpdate(id, {
         ...req.body.restaurant
@@ -97,7 +107,7 @@ app.delete('/restaurants/:id', handleAsync(async (req, res) => {
     res.redirect('/restaurants');
 }));
 
-app.post('/restaurants/:id/reviews', handleAsync(async (req, res) => {
+app.post('/restaurants/:id/reviews',validateReview, handleAsync(async (req, res) => {
     const { id } = req.params;
     const restaurant = await Restaurant.findById(id);
     const review = new Review(req.body.review)
