@@ -4,10 +4,10 @@ const path = require('path');
 const ejsMate = require('ejs-mate');
 const joi = require('joi');
 const { restaurantSchema, reviewSchema } = require('./schemas');
-const handleAsync = require('./Utility/handleAsync');
 const ExpressError = require('./Utility/ExpressError');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
+
 const Restaurant = require('./models/restaurant');
 const Review = require('./models/review');
 
@@ -39,16 +39,7 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
-const validateReview = (req, res, next) => {
-    const { error } = reviewSchema.validate(req.body);
 
-    if (error) {
-        const msg = error.details.map(el => el.message).join(',')
-        throw new ExpressError(msg, 400)
-    } else {
-        next();
-    }
-}
 
 app.use('/restaurants', restaurants)
 app.use('/restaurants/:id/reviews', reviews)
