@@ -11,6 +11,11 @@ const methodOverride = require('method-override');
 const Restaurant = require('./models/restaurant');
 const Review = require('./models/review');
 
+// Routes Imported
+const restaurants = require('./routes/restaurants');
+const reviews = require('./routes/reviews');
+
+
 // problem with ejs-mate
 
 mongoose.connect('mongodb://localhost:27017/yelp-restaurant', {
@@ -34,16 +39,6 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
-const validateRestaurant = (req, res, next) => {
-    const { error } = restaurantSchema.validate(req.body);
-
-    if (error) {
-        const msg = error.details.map(el => el.message).join(',')
-        throw new ExpressError(msg, 400)
-    } else {
-        next();
-    }
-}
 const validateReview = (req, res, next) => {
     const { error } = reviewSchema.validate(req.body);
 
@@ -55,6 +50,8 @@ const validateReview = (req, res, next) => {
     }
 }
 
+app.use('/restaurants', restaurants)
+app.use('/restaurants/:id/reviews', reviews)
 
 
 app.get('/', (req, res) => {
@@ -62,68 +59,8 @@ app.get('/', (req, res) => {
 })
 
 
-app.get('/restaurants', handleAsync(async (req, res) => {
-    const restaurants = await Restaurant.find({})
-    res.render('restaurants/index', { restaurants })
-}))
-
-app.get('/restaurants/new', (req, res) => {
-
-    res.render('restaurants/new')
-})
-
-app.post('/restaurants', validateRestaurant, handleAsync(async (req, res, next) => {
-    // if(!req.body.campground) throw new ExpressError('Hey Invalid Data', 400)
-    const restaurants = new Restaurant(req.body.restaurant);
-    await restaurants.save();
-    res.redirect(`/restaurants/${restaurants._id}`)
-}))
-
-app.get('/restaurants/:id', handleAsync(async (req, res) => {
-    const { id } = req.params;
-    const restaurants = await Restaurant.findById(req.params.id).populate('reviews');
-    res.render('restaurants/show', { restaurants })
-}));
-
-app.get('/restaurants/:id/edit', handleAsync(async (req, res) => {
-    const { id } = req.params;
-    const restaurants = await Restaurant.findById(req.params.id);
-
-    res.render('restaurants/edit', { restaurants });
-}))
 
 
-app.put('/restaurants/:id', validateRestaurant, handleAsync(async (req, res) => {
-    const { id } = req.params;
-    const restaurants = await Restaurant.findByIdAndUpdate(id, {
-        ...req.body.restaurant
-    })
-    res.redirect(`/restaurants/${restaurants._id}`)
-}))
-
-app.delete('/restaurants/:id', handleAsync(async (req, res) => {
-    const { id } = req.params;
-    await Restaurant.findByIdAndDelete(id);
-    res.redirect('/restaurants');
-}));
-
-app.post('/restaurants/:id/reviews', validateReview, handleAsync(async (req, res) => {
-    const { id } = req.params;
-    const restaurant = await Restaurant.findById(id);
-    const review = new Review(req.body.review)
-    restaurant.reviews.push(review);
-    await review.save();
-    await restaurant.save();
-    res.redirect(`/restaurants/${id}`)
-}))
-
-app.delete('/restaurants/:id/reviews/:reviewId', handleAsync(async (req, res) => {
-    const { id, reviewId } = req.params;
-    await Restaurant.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
-    await Review.findByIdAndDelete(reviewId);
-    res.redirect(`/restaurants/${id}`);
-
-}))
 
 
 app.all(('*'), (req, res, next) => {
