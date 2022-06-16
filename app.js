@@ -9,6 +9,10 @@ const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const session = require('express-session');
 const flash = require('connect-flash');
+const passport = require('passport');
+const localStrategy = require('passport-local');
+const User = require('./models/user');
+
 
 
 const Restaurant = require('./models/restaurant');
@@ -17,6 +21,7 @@ const Review = require('./models/review');
 // Routes Imported
 const restaurants = require('./routes/restaurants');
 const reviews = require('./routes/reviews');
+const { getMaxListeners } = require('process');
 
 
 // problem with ejs-mate
@@ -49,15 +54,21 @@ const sessionConfig = {
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
-        expires: Date.now() + 1000 *60 *60 *24 *7,
-        maxAge: 1000 *60 *60 *24 *7,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7,
     }
 }
 
 app.use(session(sessionConfig));
 app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser);
 
-app.use((req,res,next)=>{
+
+app.use((req, res, next) => {
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     next();
@@ -74,7 +85,11 @@ app.get('/', (req, res) => {
     res.send('Hello GUYS');
 })
 
-
+app.get('/test', async (req, res) => {
+    const user = new User({ email: 'buka@gmail.com', username: 'buka' });
+    const newUser = await User.register(user, 'bukadon');
+    res.send(newUser);
+})
 
 
 
