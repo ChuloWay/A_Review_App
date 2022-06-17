@@ -29,7 +29,7 @@ router.post('/login', passport.authenticate('local', { failureFlash: true, failu
     res.redirect('/restaurants');
 });
 
-router.get('/logout', (req, res, next) => {
+router.get('/logout', (req, res) => {
     req.logout((err) => {
         if (err) {
             return next(err);
