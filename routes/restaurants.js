@@ -5,6 +5,8 @@ const { restaurantSchema } = require('../schemas');
 
 const ExpressError = require('../Utility/ExpressError');
 const Restaurant = require('../models/restaurant');
+const passport = require('passport');
+const isLoggedIn = require('../middleware');
 
 
 const validateRestaurant = (req, res, next) => {
@@ -26,12 +28,11 @@ router.get('/', handleAsync(async (req, res) => {
 }))
 
 
-router.get('/new', (req, res) => {
-
-    res.render('restaurants/new')
+router.get('/new',isLoggedIn, (req, res) => {
+    res.render('restaurants/new');
 })
 
-router.post('/', validateRestaurant, handleAsync(async (req, res, next) => {
+router.post('/',isLoggedIn, validateRestaurant, handleAsync(async (req, res, next) => {
     // if(!req.body.campground) throw new ExpressError('Hey Invalid Data', 400)
     const restaurants = new Restaurant(req.body.restaurant);
     await restaurants.save();
@@ -39,20 +40,20 @@ router.post('/', validateRestaurant, handleAsync(async (req, res, next) => {
     res.redirect(`/restaurants/${restaurants._id}`)
 }))
 
-router.get('/:id', handleAsync(async (req, res) => {
+router.get('/:id',handleAsync(async (req, res) => {
     const { id } = req.params;
     const restaurants = await Restaurant.findById(req.params.id).populate('reviews');
-    if(!restaurants){
+    if (!restaurants) {
         req.flash('error', 'Cannot Find That Restaurant!');
         res.redirect('/restaurants');
     }
-    res.render('restaurants/show', { restaurants})
+    res.render('restaurants/show', { restaurants })
 }));
 
-router.get('/:id/edit', handleAsync(async (req, res) => {
+router.get('/:id/edit',isLoggedIn, handleAsync(async (req, res) => {
     const { id } = req.params;
     const restaurants = await Restaurant.findById(req.params.id);
-    if(!restaurants){
+    if (!restaurants) {
         req.flash('error', 'Cannot Find That Restaurant!');
         res.redirect('/restaurants');
     }
@@ -61,7 +62,7 @@ router.get('/:id/edit', handleAsync(async (req, res) => {
 
 
 
-router.put('/:id', validateRestaurant, handleAsync(async (req, res) => {
+router.put('/:id',isLoggedIn, validateRestaurant, handleAsync(async (req, res) => {
     const { id } = req.params;
     const restaurants = await Restaurant.findByIdAndUpdate(id, {
         ...req.body.restaurant
@@ -71,7 +72,7 @@ router.put('/:id', validateRestaurant, handleAsync(async (req, res) => {
     res.redirect(`/restaurants/${restaurants._id}`)
 }))
 
-router.delete('/:id', handleAsync(async (req, res) => {
+router.delete('/:id',isLoggedIn, handleAsync(async (req, res) => {
     const { id } = req.params;
     await Restaurant.findByIdAndDelete(id);
     req.flash('success', 'Successfully Deleted Restaurant!')

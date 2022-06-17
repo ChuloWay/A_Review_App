@@ -14,14 +14,13 @@ const localStrategy = require('passport-local');
 const User = require('./models/user');
 
 
-
-const Restaurant = require('./models/restaurant');
+const restaurant = require('./models/restaurant');
 const Review = require('./models/review');
 
 // Routes Imported
-const restaurants = require('./routes/restaurants');
-const reviews = require('./routes/reviews');
-const { getMaxListeners } = require('process');
+const userRoutes = require('./routes/user');
+const restaurantRoutes = require('./routes/restaurants');
+const reviewRoutes = require('./routes/reviews');
 
 
 // problem with ejs-mate
@@ -65,7 +64,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser);
+passport.deserializeUser(User.deserializeUser());
 
 
 app.use((req, res, next) => {
@@ -76,9 +75,9 @@ app.use((req, res, next) => {
 
 
 
-
-app.use('/restaurants', restaurants)
-app.use('/restaurants/:id/reviews', reviews)
+app.use('/', userRoutes)
+app.use('/restaurants', restaurantRoutes)
+app.use('/restaurants/:id/reviews', reviewRoutes)
 
 
 app.get('/', (req, res) => {
