@@ -14,20 +14,30 @@ router.post('/register', handleAsync(async (req, res) => {
         const newUser = await User.register(user, password);
         req.flash('success', 'Welcome Buddy!');
         res.redirect('/restaurants');
-    } catch(err) {
-        req.flash('error',err.message);
+    } catch (err) {
+        req.flash('error', err.message);
         res.redirect('/register');
     }
 }));
 
-router.get('/login', (req,res)=>{
+router.get('/login', (req, res) => {
     res.render('users/login');
 });
 
-router.post('/login',passport.authenticate('local',{failureFlash: true, failureRedirect:'/login'}),(req,res)=>{
+router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
     req.flash('success', 'Welcome Buddy');
-    res.redirect('/restaurants'); 
+    res.redirect('/restaurants');
 });
+
+router.get('/logout', (req, res, next) => {
+    req.logout((err) => {
+        if (err) {
+            return next(err);
+        }
+        req.flash('success', 'Logged Out Successfully!');
+        res.redirect('/restaurants');
+    })
+})
 
 module.exports = router;
 
