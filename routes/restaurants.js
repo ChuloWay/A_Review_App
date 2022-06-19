@@ -6,7 +6,7 @@ const { restaurantSchema } = require('../schemas');
 const ExpressError = require('../Utility/ExpressError');
 const Restaurant = require('../models/restaurant');
 const passport = require('passport');
-const isLoggedIn = require('../middleware');
+const {isLoggedIn} = require('../middleware');
 
 
 const validateRestaurant = (req, res, next) => {
@@ -33,7 +33,6 @@ router.get('/new',isLoggedIn, (req, res) => {
 })
 
 router.post('/',isLoggedIn, validateRestaurant, handleAsync(async (req, res, next) => {
-    // if(!req.body.campground) throw new ExpressError('Hey Invalid Data', 400)
     const restaurants = new Restaurant(req.body.restaurant);
     await restaurants.save();
     req.flash('success', 'Created New Restaurant')
@@ -59,6 +58,7 @@ router.get('/:id/edit',isLoggedIn, handleAsync(async (req, res) => {
     }
     res.render('restaurants/edit', { restaurants });
 }))
+
 
 
 
