@@ -18,4 +18,4 @@ module.exports.isLoggedIn = (req, res, next) => {
 
     req.session.returnTo = req.originalUrl;
     return res.redirect(`/login`);
-}
+};
