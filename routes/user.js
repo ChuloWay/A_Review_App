@@ -3,7 +3,7 @@ const router = express.Router();
 const passport = require('passport');
 const handleAsync = require('../Utility/handleAsync');
 const User = require('../models/user');
-const {isLoggedIn} = require('../middleware');
+const { isLoggedIn } = require('../middleware');
 
 router.get('/register', (req, res) => {
     res.render('users/register');
@@ -20,33 +20,45 @@ router.post('/register', handleAsync(async (req, res, next) => {
         })
     } catch (err) {
         req.flash('error', err.message);
-    
+
         res.redirect('/register');
     }
 }));
 
+// router.get('/login', (req, res) => {
+//     if (req.query.origin) {
+//         req.session.returnTo = req.query.origin;
+//     } else {
+//         req.session.returnTo = req.header('Referer');
+//     }
+//     // console.log("req.session.returnTo: ", req.session.returnTo);
+//     res.render('users/login');
+// });
+
 router.get('/login', (req, res) => {
-    if (req.query.origin) {
-        req.session.returnTo = req.query.origin;
-    } else {
-        req.session.returnTo = req.header('Referer');
-    }
-    // console.log("req.session.returnTo: ", req.session.returnTo);
     res.render('users/login');
 });
 
+// router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
+//     let redirectUrl = '/restaurants'
+//     console.log("req.session.returnTo: ", req.session.returnTo);
+//     req.flash('success', `Welcome back ${req.user.username}!`);
+//     if (req.session.returnTo) {
+//         console.log("sksksksks");
+//         redirectUrl = req.session.returnTo
+//         delete req.session.returnTo
+//     }
+//     console.log(redirectUrl);
+//     res.redirect(redirectUrl);
+// });
+
 router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
-    let redirectUrl = '/restaurants'
-    console.log("req.session.returnTo: ", req.session.returnTo);
-    req.flash('success', `Welcome back ${req.user.username}!`);
-    if (req.session.returnTo) {
-        console.log("sksksksks");
-        redirectUrl = req.session.returnTo
-        delete req.session.returnTo
-    }
-    console.log(redirectUrl);
+    req.flash('success', 'welcome back!');
+    var redirectUrl = req.session.returnTo || '/restaurants';
+    delete req.session.returnTo; 
     res.redirect(redirectUrl);
 });
+
 
 // router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
 //     req.flash('success', `Welcome back ${req.user.username}!`);
@@ -59,10 +71,7 @@ router.post('/login', passport.authenticate('local', { failureFlash: true, failu
 // });
 
 router.get('/logout', (req, res, next) => {
-    req.logout((err) => {
-        if (err) {
-            return next(err);
-        }
+    req.logout(() => {
         req.flash('success', 'Logged Out Successfully!');
         res.redirect('/restaurants');
     })

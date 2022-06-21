@@ -11,11 +11,10 @@
 
 
 module.exports.isLoggedIn = (req, res, next) => {
-    if (req.isAuthenticated()) {
-        next();
+    if (!req.isAuthenticated()) {
+        // req.session.returnTo = req.originalUrl;
+        req.flash('error', 'You Must Be Logged In First!');
+        return res.redirect(`/login`);
     }
-    req.flash('error', 'You Must Be Logged In First!');
-
-    req.session.returnTo = req.originalUrl;
-    return res.redirect(`/login`);
+    next();
 };

@@ -10,14 +10,17 @@
             </div>
             <ul class="list-group list-group-flush">
               <li class="list-group-item text-muted"><%= restaurants.location  %> </li>
+              <li class="list-group-item ">Submitted By : <%= restaurants.author.username  %> </li>
               <li class="list-group-item">$<%= restaurants.price%>/Meal</li>
             </ul>
+             <% if( currentUser && restaurants.author.equals(currentUser._id)) { %> 
             <div class="card-body">
                 <a class="card-link btn btn-info" href="/restaurants/<%= restaurants._id %>/edit ">Edit</a>
                 <form class="d-inline" action="/restaurants/<%= restaurants._id %>?_method=DELETE" method="POST">
                     <button class="btn btn-danger">Delete</button>
                     </form>           
             </div>
+            <% } %> 
             <div class="card-footer text-muted">
                 <a  class="card-link btn btn-secondary" href="/restaurants">All Restaurants</a>
             </div>

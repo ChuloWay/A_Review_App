@@ -34,6 +34,7 @@ router.get('/new',isLoggedIn, (req, res) => {
 
 router.post('/',isLoggedIn, validateRestaurant, handleAsync(async (req, res, next) => {
     const restaurants = new Restaurant(req.body.restaurant);
+    restaurants.author = req.user._id;
     await restaurants.save();
     req.flash('success', 'Created New Restaurant')
     res.redirect(`/restaurants/${restaurants._id}`)
@@ -41,7 +42,8 @@ router.post('/',isLoggedIn, validateRestaurant, handleAsync(async (req, res, nex
 
 router.get('/:id',handleAsync(async (req, res) => {
     const { id } = req.params;
-    const restaurants = await Restaurant.findById(req.params.id).populate('reviews');
+    const restaurants = await (await Restaurant.findById(req.params.id).populate('reviews')).populate('author');
+    console.log(restaurants);
     if (!restaurants) {
         req.flash('error', 'Cannot Find That Restaurant!');
         res.redirect('/restaurants');
