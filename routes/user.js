@@ -5,10 +5,9 @@ const handleAsync = require('../Utility/handleAsync');
 const User = require('../models/user');
 const { renderRegister, registered, renderLogin, loggedIn, logOut } = require('../controllers/users');
 
-router.get('/register', renderRegister);
-
-
-router.post('/register', handleAsync(registered));
+router.route('/register')
+.get( renderRegister)
+.post( handleAsync(registered));
 
 // router.get('/login', (req, res) => {
 //     if (req.query.origin) {
@@ -20,7 +19,9 @@ router.post('/register', handleAsync(registered));
 //     res.render('users/login');
 // });
 
-router.get('/login', renderLogin );
+router.route('/login')
+.get(renderLogin )
+.post( passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), loggedIn);
 
 // router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
 //     let redirectUrl = '/restaurants'
@@ -35,7 +36,6 @@ router.get('/login', renderLogin );
 //     res.redirect(redirectUrl);
 // });
 
-router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), loggedIn);
 
 router.get('/logout',logOut)
 

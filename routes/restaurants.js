@@ -16,19 +16,18 @@ const { isLoggedIn, validateRestaurant, isAuthor } = require('../middleware');
 
 
 // all routes for restaurants start with '/' repping = /restaurants
-router.get('/', handleAsync(index));
-
+router.route('/')
+.get( handleAsync(index))
+.post( isLoggedIn, validateRestaurant, handleAsync(createRestaurant));
 
 router.get('/new', isLoggedIn, (renderNewForm));
 
-router.post('/', isLoggedIn, validateRestaurant, handleAsync(createRestaurant));
-
-router.get('/:id', handleAsync(showRestaurant));
-
 router.get('/:id/edit', isLoggedIn, isAuthor, handleAsync(renderEditForm));
 
-router.put('/:id', isLoggedIn, isAuthor, validateRestaurant, handleAsync(updateRestaurant));
+router.route('/:id')
+.get( handleAsync(showRestaurant))
+.put( isLoggedIn, isAuthor, validateRestaurant, handleAsync(updateRestaurant))
+.delete( isLoggedIn, isAuthor, handleAsync(deleteRestaurant));
 
-router.delete('/:id', isLoggedIn, isAuthor, handleAsync(deleteRestaurant));
 
 module.exports = router;
