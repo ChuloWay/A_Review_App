@@ -2,7 +2,6 @@
 const express = require('express');
 const path = require('path');
 const ejsMate = require('ejs-mate');
-const joi = require('joi');
 const { restaurantSchema, reviewSchema } = require('./schemas');
 const ExpressError = require('./Utility/ExpressError');
 const mongoose = require('mongoose');
