@@ -3,27 +3,12 @@ const router = express.Router();
 const passport = require('passport');
 const handleAsync = require('../Utility/handleAsync');
 const User = require('../models/user');
-const { isLoggedIn } = require('../middleware');
+const { renderRegister, registered, renderLogin, loggedIn, logOut } = require('../controllers/users');
 
-router.get('/register', (req, res) => {
-    res.render('users/register');
-})
-router.post('/register', handleAsync(async (req, res, next) => {
-    try {
-        const { email, username, password } = req.body;
-        const user = new User({ email, username });
-        const newUser = await User.register(user, password);
-        req.login(newUser, err => {
-            if (err) return next(err);
-            req.flash('success', `Welcome ${req.body.username}!`);
-            res.redirect('/restaurants');
-        })
-    } catch (err) {
-        req.flash('error', err.message);
+router.get('/register', renderRegister);
 
-        res.redirect('/register');
-    }
-}));
+
+router.post('/register', handleAsync(registered));
 
 // router.get('/login', (req, res) => {
 //     if (req.query.origin) {
@@ -35,9 +20,7 @@ router.post('/register', handleAsync(async (req, res, next) => {
 //     res.render('users/login');
 // });
 
-router.get('/login', (req, res) => {
-    res.render('users/login');
-});
+router.get('/login', renderLogin );
 
 // router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
 //     let redirectUrl = '/restaurants'
@@ -52,30 +35,9 @@ router.get('/login', (req, res) => {
 //     res.redirect(redirectUrl);
 // });
 
-router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
-    req.flash('success', 'welcome back!');
-    var redirectUrl = req.session.returnTo || '/restaurants';
-    delete req.session.returnTo; 
-    res.redirect(redirectUrl);
-});
+router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), loggedIn);
 
-
-// router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
-//     req.flash('success', `Welcome back ${req.user.username}!`);
-//     if(req.session.returnTo !== undefined){
-//         res.redirect(req.session.returnTo)
-//     }
-//     else{
-//         res.redirect('/restaurants');
-//     }
-// });
-
-router.get('/logout', (req, res, next) => {
-    req.logout(() => {
-        req.flash('success', 'Logged Out Successfully!');
-        res.redirect('/restaurants');
-    })
-})
+router.get('/logout',logOut)
 
 module.exports = router;
 
