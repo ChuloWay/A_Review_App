@@ -14,7 +14,9 @@ const handleAsync = require('../Utility/handleAsync');
 const Restaurant = require('../models/restaurant');
 const { isLoggedIn, validateRestaurant, isAuthor } = require('../middleware');
 const multer = require('multer');
-const upload = multer({dest: 'uploads/' });
+// node automatically looks for index.js files in a dir
+const { storage } = require('../cloudinary');
+const upload = multer({ storage });
 
 
 // all routes for restaurants start with '/' repping = /restaurants
@@ -22,8 +24,9 @@ router.route('/')
 .get( handleAsync(index))
 // .post( isLoggedIn, validateRestaurant, handleAsync(createRestaurant));
 .post(upload.single('file'),(req,res)=>{
-    res.send(req.body, req.file);
-})
+    res.send("e dey work");
+    console.log(req.body, req.file);
+});
 
 router.get('/new', isLoggedIn, (renderNewForm));
 
