@@ -22,11 +22,11 @@ const upload = multer({ storage });
 // all routes for restaurants start with '/' repping = /restaurants
 router.route('/')
 .get( handleAsync(index))
-// .post( isLoggedIn, validateRestaurant, handleAsync(createRestaurant));
-.post(upload.single('file'),(req,res)=>{
-    res.send("e dey work");
-    console.log(req.body, req.file);
-});
+ .post( isLoggedIn, upload.array('file'),  validateRestaurant, handleAsync(createRestaurant));
+// .post(upload.single('file'),(req,res)=>{
+//     res.send("e dey work");
+//     console.log(req.body, req.file);
+// });
 
 router.get('/new', isLoggedIn, (renderNewForm));
 

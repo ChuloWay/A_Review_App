@@ -9,12 +9,14 @@ module.exports.renderNewForm = (req, res) => {
     res.render('restaurants/new');
 };
 
-module.exports.createRestaurant= async (req, res, next) => {
+module.exports.createRestaurant = async (req, res, next) => {
     const restaurants = new Restaurant(req.body.restaurant);
+    restaurants.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
     restaurants.author = req.user._id;
     await restaurants.save();
-    req.flash('success', 'Created New Restaurant')
-    res.redirect(`/restaurants/${restaurants._id}`)
+    console.log(restaurants);
+    req.flash('success', 'Created New Restaurant');
+    res.redirect(`/restaurants/${restaurants._id}`);
 }
 
 module.exports.showRestaurant = async (req, res) => {
@@ -42,7 +44,7 @@ module.exports.renderEditForm = async (req, res) => {
         res.redirect('/restaurants');
     }
     res.render('restaurants/edit', { restaurants });
-};  
+};
 
 module.exports.updateRestaurant = async (req, res) => {
     const { id } = req.params;
