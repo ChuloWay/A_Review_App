@@ -22,7 +22,7 @@ const upload = multer({ storage });
 // all routes for restaurants start with '/' repping = /restaurants
 router.route('/')
 .get( handleAsync(index))
- .post( isLoggedIn, upload.array('file'),  validateRestaurant, handleAsync(createRestaurant));
+ .post( isLoggedIn, upload.array('image'),  validateRestaurant, handleAsync(createRestaurant));
 // .post(upload.single('file'),(req,res)=>{
 //     res.send("e dey work");
 //     console.log(req.body, req.file);
@@ -34,7 +34,7 @@ router.get('/:id/edit', isLoggedIn, isAuthor, handleAsync(renderEditForm));
 
 router.route('/:id')
 .get( handleAsync(showRestaurant))
-.put( isLoggedIn, isAuthor, validateRestaurant, handleAsync(updateRestaurant))
+.put( isLoggedIn, isAuthor, upload.array('image'), validateRestaurant, handleAsync(updateRestaurant))
 .delete( isLoggedIn, isAuthor, handleAsync(deleteRestaurant));
 
 
