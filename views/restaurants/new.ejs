@@ -26,28 +26,6 @@
         <div class="valid-feedback">Good!</div>
 
       </div>
-      <!-- <div class="mb-3">
-        <label class="form-label" for="image">Image Url</label>
-        <input
-          class="form-control"
-          type="text"
-          id="image"
-          name="restaurant[image]"
-          required
-        />
-      </div>
-      <div class="valid-feedback">Valid!</div> -->
-      <div class="mb-3">
-        <!-- <label class="form-label" for="image">Image Url</label> -->
-        <input
-          class="form-control"
-          type="file"
-          id="image"
-          name="image"
-          multiple="multiple"
-          required
-        />
-      </div>
 
       <div class="mb-3">
         <label class="form-label" for="price" >Restaurant Price</label>
@@ -71,7 +49,12 @@
         /></textarea>
         <div class="valid-feedback">Good Description!</div>
       </div>
-
+      <div class="mb-3">
+        <label for="image" class="form-label mb-2">Choose Image(s)..</label>
+        <input class="form-control" type="file" id="image" name="image" multiple>
+        <div class="valid-feedback">Good!</div>
+      </div>
+      
       <div class="mb-3">
         <button class="btn btn-success">Add Restaurant</button>
       </div>

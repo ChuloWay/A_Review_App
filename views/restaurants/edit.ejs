@@ -23,15 +23,9 @@
           type="text"
           id="location"
           name="restaurant[location]"
-          value="<%= restaurants.location %> "
+          value="<%= restaurants.location %>"
           required
         />
-        <div class="valid-feedback">Good!</div>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label" for="image">Add Images</label>
-      <input type="file" name="image" id="image" multiple="multiple">
         <div class="valid-feedback">Good!</div>
       </div>
 
@@ -58,7 +52,13 @@
         /><%= restaurants.description %></textarea>
         <div class="valid-feedback">Good Description!</div>
       </div>
-    </div>
+      
+      <div class="mb-3">
+        <label for="image" class="form-label mb-2">Add More Image(s)..</label>
+        <input class="form-control" type="file" id="image" name="image" multiple>
+        <div class="valid-feedback">Good!</div>
+      </div>
+  
       <div class="mb-3">
         <button class="btn btn-info">Update Restaurant</button>
       </div>

@@ -51,7 +51,7 @@ module.exports.updateRestaurant = async (req, res) => {
     const restaurants = await Restaurant.findByIdAndUpdate(id, {
         ...req.body.restaurant
     })
-    const imgs = restaurants.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
+    const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }));
     restaurants.images.push(...imgs);
     await restaurants.save();
     req.flash('success', 'Succesfully Updated!');
