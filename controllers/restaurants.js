@@ -1,4 +1,7 @@
 const Restaurant = require('../models/restaurant');
+// to update images in cloudinary
+const { cloudinary } = require('../cloudinary');
+
 
 module.exports.index = async (req, res) => {
     const restaurants = await Restaurant.find({})
@@ -54,6 +57,14 @@ module.exports.updateRestaurant = async (req, res) => {
     const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }));
     restaurants.images.push(...imgs);
     await restaurants.save();
+    if (req.body.deleteImages) {
+        // updating and deleting imgs in cloudinary
+        for (let filename of req.body.deleteImages) {
+            await cloudinary.uploader.destroy(filename);
+        }
+        await restaurants.updateOne({ $pull: { images: { filename: { $in: req.body.deleteImages } } } })
+        console.log(restaurants);
+    }
     req.flash('success', 'Succesfully Updated!');
     res.redirect(`/restaurants/${restaurants._id}`);
 };

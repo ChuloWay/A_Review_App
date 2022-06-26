@@ -1,3 +1,4 @@
+const Joi = require('joi');
 const joi = require('joi');
 
 module.exports.restaurantSchema =  joi.object({
@@ -7,7 +8,8 @@ module.exports.restaurantSchema =  joi.object({
         // image: joi.string().required(),
         location: joi.string().required(),
         description: joi.string().required()
-    }).required()
+    }).required(),
+    deleteImages:Joi.array()
 })
 
 module.exports.reviewSchema = joi.object({
