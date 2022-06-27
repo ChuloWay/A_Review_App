@@ -1,7 +1,10 @@
 const Restaurant = require('../models/restaurant');
 // to update images in cloudinary
 const { cloudinary } = require('../cloudinary');
-
+// Mapboc forward geocoding
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+const mapBoxToken = process.env.MAPBOX_TOKEN;
+const geoCoder = mbxGeocoding({ accessToken: mapBoxToken });
 
 module.exports.index = async (req, res) => {
     const restaurants = await Restaurant.find({})
@@ -13,13 +16,19 @@ module.exports.renderNewForm = (req, res) => {
 };
 
 module.exports.createRestaurant = async (req, res, next) => {
-    const restaurants = new Restaurant(req.body.restaurant);
-    restaurants.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
-    restaurants.author = req.user._id;
-    await restaurants.save();
-    console.log(restaurants);
-    req.flash('success', 'Created New Restaurant');
-    res.redirect(`/restaurants/${restaurants._id}`);
+   const geoData = await geoCoder.forwardGeocode({
+        query: req.body.restaurant.location,
+        limit: 1
+    }).send()
+    res.send(geoData.body.features[0].geometry.coordinates);
+    // res.send('okkkkkkk')
+    // const restaurants = new Restaurant(req.body.restaurant);
+    // restaurants.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
+    // restaurants.author = req.user._id;
+    // await restaurants.save();
+    // console.log(restaurants);
+    // req.flash('success', 'Created New Restaurant');
+    // res.redirect(`/restaurants/${restaurants._id}`);
 }
 
 module.exports.showRestaurant = async (req, res) => {
