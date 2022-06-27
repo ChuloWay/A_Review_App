@@ -9,8 +9,8 @@ const ImageSchema = new Schema({
     filename: String
 });
 
-ImageSchema.virtual('thumbnail').get(function() {
-  return  this.url.replace('/upload', '/upload/w_200/h_200')
+ImageSchema.virtual('thumbnail').get(function () {
+    return this.url.replace('/upload', '/upload/w_200/h_200')
 });
 
 const RestaurantSchema = new Schema({
@@ -18,24 +18,35 @@ const RestaurantSchema = new Schema({
     images: [
         ImageSchema
     ],
+    geometry: {
+        type: {
+            type:String,
+            enum: ['Point'],
+            required: true
+        },
+        coordinates: {
+            type: [Number],
+            required: true
+        }
+    },
     price: Number,
     description: String,
     location: String,
     author: {
-        type:Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'user'
 
     },
-    reviews:[{
-        type:Schema.Types.ObjectId,
-        ref:'Review'
+    reviews: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Review'
     }]
 });
 
-RestaurantSchema.post('findOneAndDelete', async function(doc){
-    if(doc){
+RestaurantSchema.post('findOneAndDelete', async function (doc) {
+    if (doc) {
         await Review.deleteMany({
-            _id: {$in: doc.reviews}
+            _id: { $in: doc.reviews }
         })
     }
 })
