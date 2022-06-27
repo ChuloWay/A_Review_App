@@ -26,7 +26,7 @@ module.exports.createRestaurant = async (req, res, next) => {
     restaurants.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
     restaurants.author = req.user._id;
     await restaurants.save();
-    console.log(restaurants);
+    // console.log(restaurants);
     req.flash('success', 'Created New Restaurant');
     res.redirect(`/restaurants/${restaurants._id}`);
 }
@@ -40,7 +40,7 @@ module.exports.showRestaurant = async (req, res) => {
                 path: 'author'
             }
         })).populate('author');
-    console.log(restaurants);
+    // console.log(restaurants);
     if (!restaurants) {
         req.flash('error', 'Cannot Find That Restaurant!');
         res.redirect('/restaurants');

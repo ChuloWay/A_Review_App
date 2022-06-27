@@ -161,6 +161,11 @@
 
 <script>
   const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+  const restaurant = <%- JSON.stringify(restaurants) %>
+  console.log('restaurant.geometry')
 </script>
 
 <script src="/scripts/map.js"></script>
+
+
+
