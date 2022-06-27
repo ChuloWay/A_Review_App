@@ -10,5 +10,5 @@
 
 
 new mapboxgl.Marker()
-  .setLngLat([-75.5, 40])
+  .setLngLat(restaurant.geometry.coordinates)
   .addTo(map)
