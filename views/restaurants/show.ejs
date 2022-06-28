@@ -1,32 +1,37 @@
 <% layout('/layouts/boilerplate') -%>
 <link rel="stylesheet" href="/stylesheets/stars.css" />
 
-
 <div class="row">
   <div class="col-6">
-    <div id='map' style='width: 400px; height: 300px;'></div>
-
     <div
       id="restaurantsCarousel"
       class="carousel slide"
-      data-bs-ride="carousel"
-    >
+      data-bs-ride="carousel">
       <div class="carousel-inner">
-        <% restaurants.images.forEach((img, i) => { %> 
-          <div class="carousel-item <%= i === 0 ? 'active' : ''%>"">
+        <% restaurants.images.forEach((img, i) => { %> <div class="carousel-item
+        <%= i === 0 ? 'active' : ''%>"">
         <img class="d-block w-100" src="<%= img.url%>" alt="" />
       </div>
-      <% }) %>
-      <% if(restaurants.images.length > 1 ) {  %> 
-      <button class="carousel-control-prev" type="button" data-bs-target="#restaurantsCarousel" data-bs-slide="prev">
+      <% }) %> <% if(restaurants.images.length > 1 ) { %>
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#restaurantsCarousel"
+        data-bs-slide="prev"
+      >
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
       </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#restaurantsCarousel" data-bs-slide="next">
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#restaurantsCarousel"
+        data-bs-slide="next"
+      >
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
       </button>
-      <% } %> 
+      <% } %>
     </div>
     <div class="card mb-3">
       <div class="card-body">
@@ -63,8 +68,9 @@
       </div>
     </div>
   </div>
-
+  </div>
   <div class="col-6">
+    <div id="map" style="width: 635px; height: 300px"></div>
     <% if( currentUser ) { %>
     <h2>Leave A Review</h2>
     <form
@@ -134,8 +140,7 @@
       </div>
       <button class="btn btn-success">Submit Review</button>
     </form>
-    <% } %> 
-    <% for(let review of restaurants.reviews) { %>
+    <% } %> <% for(let review of restaurants.reviews) { %>
     <div class="card mb-3">
       <div class="card-body">
         <h6 class="card-subtitle mb-2 text-muted">
@@ -160,12 +165,8 @@
 </div>
 
 <script>
-  const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
-  const restaurant = <%- JSON.stringify(restaurants) %>
-  console.log('restaurant.geometry')
+  const mapToken = '<%-process.env.MAPBOX_TOKEN%>'
+  const restaurant = <%-JSON.stringify(restaurants)%>
 </script>
 
 <script src="/scripts/map.js"></script>
-
-
-
