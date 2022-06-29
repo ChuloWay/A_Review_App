@@ -121,7 +121,7 @@ coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
 new mapboxgl.Popup()
 .setLngLat(coordinates)
 .setHTML(
-`magnitude: ${mag}<br>Was there a tsunami?: ${tsunami}`
+<h3>Restaurant</h3>
 )
 .addTo(map);
 });
