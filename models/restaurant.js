@@ -13,6 +13,9 @@ ImageSchema.virtual('thumbnail').get(function () {
     return this.url.replace('/upload', '/upload/w_200/h_200')
 });
 
+// allows you access virtual schema properties when usng Json Methods-stringify
+const opts = { toJSON: { virtuals: true }};
+
 const RestaurantSchema = new Schema({
     title: String,
     images: [
@@ -41,7 +44,12 @@ const RestaurantSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Review'
     }]
+}, opts);
+
+RestaurantSchema.virtual('properties.popUpMarkup').get(function () {
+    return 'Pop Up Text'
 });
+
 
 RestaurantSchema.post('findOneAndDelete', async function (doc) {
     if (doc) {
