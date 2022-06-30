@@ -47,7 +47,9 @@ const RestaurantSchema = new Schema({
 }, opts);
 
 RestaurantSchema.virtual('properties.popUpMarkup').get(function () {
-    return 'Pop Up Text'
+    return`
+    <strong><a href = "/restaurants/${this._id}">${this.title}</a></strong>
+    <p>${this.description.substring(0,20)}...</p> `
 });
 
 
