@@ -89,7 +89,7 @@ app.use('/restaurants/:id/reviews', reviewRoutes)
 
 
 app.get('/', (req, res) => {
-    res.send('Hello GUYS');
+    res.render('restaurants/home');
 })
 
 app.get('/test', async (req, res) => {
