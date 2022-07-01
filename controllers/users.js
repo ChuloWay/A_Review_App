@@ -12,7 +12,7 @@ module.exports.registered = async (req, res, next) => {
         const newUser = await User.register(user, password);
         req.login(newUser, err => {
             if (err) return next(err);
-            req.flash('success', `Welcome ${req.body.username}!`);
+            req.flash('success', `Welcome ${req.body.username} !`);
             res.redirect('/restaurants');
         })
     } catch (err) {
@@ -27,7 +27,7 @@ module.exports.renderLogin = (req, res) => {
 };
 
 module.exports.loggedIn = (req, res) => {
-    req.flash('success', 'welcome back!');
+    req.flash('success', `Welcome Back ${req.body.username.toUpperCase()}!`);
     var redirectUrl = req.session.returnTo || '/restaurants';
     delete req.session.returnTo; 
     res.redirect(redirectUrl);

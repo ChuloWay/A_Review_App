@@ -1,4 +1,4 @@
-
+// this is the map that appears on the show page
 mapboxgl.accessToken = mapToken;
 const map = new mapboxgl.Map({
   container: 'map',
@@ -6,6 +6,9 @@ const map = new mapboxgl.Map({
   center: restaurant.geometry.coordinates, // starting position [lng, lat]
   zoom: 10 // starting zoom
 });
+
+// added zoom functions on screen
+map.addControl(new mapboxgl.NavigationControl());
 
 
 new mapboxgl.Marker()

@@ -4,12 +4,14 @@
 
 mapboxgl.accessToken = mapToken;
 const map = new mapboxgl.Map({
-    container: 'map', // container ID
+    container: 'cluster-map', // container ID
     style: 'mapbox://styles/mapbox/light-v10', // style URL
     zoom: 6, // starting zoom
     center: [-77.432, 25.0306] // starting position
 });
 
+// added zoom functions on screen
+map.addControl(new mapboxgl.NavigationControl());
 
 map.on('load', () => {
     // Add a new source from our GeoJSON data and
