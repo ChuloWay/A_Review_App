@@ -16,6 +16,8 @@ const passport = require('passport');
 const localStrategy = require('passport-local');
 const User = require('./models/user');
 
+const mongoSanitize = require('express-mongo-sanitize');
+
 
 const restaurant = require('./models/restaurant');
 const Review = require('./models/review');
@@ -50,12 +52,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// help stops mongo Injection by stopping specific characters from being recognised
+app.use(mongoSanitize());
+
 const sessionConfig = {
+    name: 'chulo',
     secret: 'topsecret',
     resave: false,
     saveUninitialized: true,
     cookie: {
+        // allows so it can only be accesible through http and not js scripts
         httpOnly: true,
+        // secure is not accesible on localhost, only on deployment.
+        // secure: true,
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7,
     }
@@ -71,7 +80,7 @@ passport.deserializeUser(User.deserializeUser());
 
 
 app.use((req, res, next) => {
-    // console.log(req.session);
+    console.log(req.query);
     if (!['/login','/'].includes(req.originalUrl)){
         req.session.returnTo = req.originalUrl;
     }
@@ -92,11 +101,7 @@ app.get('/', (req, res) => {
     res.render('restaurants/home');
 })
 
-app.get('/test', async (req, res) => {
-    const user = new User({ email: 'buka@gmail.com', username: 'buka' });
-    const newUser = await User.register(user, 'bukadon');
-    res.send(newUser);
-})
+
 
 
 
