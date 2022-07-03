@@ -28,9 +28,11 @@ const userRoutes = require('./routes/user');
 const restaurantRoutes = require('./routes/restaurants');
 const reviewRoutes = require('./routes/reviews');
 
+const MongoStore = require('connect-mongo');
 
+const dbUrl = 'mongodb://localhost:27017/yelp-restaurant'
 
-mongoose.connect('mongodb://localhost:27017/yelp-restaurant', {
+mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })
@@ -40,6 +42,7 @@ db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
     console.log("Database Connected!");
 });
+
 
 
 const app = express();
@@ -52,11 +55,24 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 // help stops mongo Injection by stopping specific characters from being recognised
 app.use(mongoSanitize());
 
+
+// const store = new MongoStore({
+//     url: dbUrl,
+//     secret: 'topsecret',
+//     touchAfter: 24 * 60 * 60
+// });
+// store.on("error",function(err){
+//     console.log("Session Error", err);
+// });
+
 const sessionConfig = {
+    store: MongoStore.create({
+         mongoUrl: dbUrl,
+         touchAfter: 24 * 60 * 60
+        }),
     name: 'chulo',
     secret: 'topsecret',
     resave: false,
@@ -71,6 +87,10 @@ const sessionConfig = {
     }
 };
 
+
+app.use(session(sessionConfig));
+
+
 const scriptSrcUrls = [
     "https://stackpath.bootstrapcdn.com",
     "https://api.tiles.mapbox.com",
@@ -79,6 +99,7 @@ const scriptSrcUrls = [
     "https://cdnjs.cloudflare.com",
     "https://cdn.jsdelivr.net",
 ];
+
 const styleSrcUrls = [
     "https://kit-free.fontawesome.com",
     "https://stackpath.bootstrapcdn.com",
@@ -86,11 +107,13 @@ const styleSrcUrls = [
     "https://api.tiles.mapbox.com",
     "https://fonts.googleapis.com",
     "https://use.fontawesome.com",
+    "https://cdn.jsdelivr.net"
 ];
 const connectSrcUrls = [
     "https://api.mapbox.com",
     "https://*.tiles.mapbox.com",
     "https://events.mapbox.com",
+    "https://cdn.jsdelivr.net",
 ];
 const fontSrcUrls = [];
 
@@ -100,7 +123,7 @@ app.use(
         directives: {
             defaultSrc: [],
             connectSrc: ["'self'", ...connectSrcUrls],
-            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+            scriptSrc: [ "'self'", "'unsafe-inline'", ...scriptSrcUrls],
             styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
             workerSrc: ["'self'", "blob:"],
             objectSrc: [],
@@ -109,6 +132,7 @@ app.use(
                 "blob:",
                 "data:",
                 "https://res.cloudinary.com/chuloway/",
+                "https://media.istockphoto.com/",
                 "https://images.unsplash.com/",
             ],
             fontSrc: ["'self'", ...fontSrcUrls],
@@ -116,7 +140,6 @@ app.use(
     }))
 
 
-app.use(session(sessionConfig));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
