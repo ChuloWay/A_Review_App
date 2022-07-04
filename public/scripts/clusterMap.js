@@ -7,7 +7,7 @@ const map = new mapboxgl.Map({
     container: 'cluster-map', // container ID
     style: 'mapbox://styles/mapbox/light-v10', // style URL
     zoom: 4, // starting zoom
-    center: [-90.432, 25.0306] // starting position
+    center: [8.6753, 25.0306] // starting position
 });
 
 // added zoom functions on screen
