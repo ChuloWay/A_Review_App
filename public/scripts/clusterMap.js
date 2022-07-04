@@ -6,7 +6,7 @@ mapboxgl.accessToken = mapToken;
 const map = new mapboxgl.Map({
     container: 'cluster-map', // container ID
     style: 'mapbox://styles/mapbox/light-v10', // style URL
-    zoom: 4, // starting zoom
+    zoom: 2, // starting zoom
     center: [8.6753, 25.0306] // starting position
 });
 
