@@ -23,13 +23,15 @@ module.exports.registered = async (req, res, next) => {
 };
 
 module.exports.renderLogin = (req, res) => {
+    if(req.query.returnTo){
+        req.session.returnTo= req.query.returnTo;
+    }
     res.render('users/login');
 };
 
 module.exports.loggedIn = (req, res) => {
     req.flash('success', `Welcome Back ${req.body.username}`)
-    var redirectUrl = req.session.returnTo || '/restaurants';
-    delete req.session.returnTo; 
+    const redirectUrl = res.locals.returnTo || '/restaurants';
     res.redirect(redirectUrl);
 };
 

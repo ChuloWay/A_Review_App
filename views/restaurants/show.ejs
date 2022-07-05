@@ -140,7 +140,11 @@
       </div>
       <button class="btn btn-success">Submit Review</button>
     </form>
-    <% } %> <% for(let review of restaurants.reviews) { %>
+    <% } else { %> 
+      <a href="/login?returnTo=/restaurants/<%= restaurants._id%>" class="btn btn-lg btn-primary">Leave a review</a>
+
+      <% } %> 
+    <% for(let review of restaurants.reviews) { %>
     <div class="card mb-3">
       <div class="card-body">
         <h6 class="card-subtitle mb-2 text-muted">

@@ -4,6 +4,7 @@ const passport = require('passport');
 const handleAsync = require('../Utility/handleAsync');
 const User = require('../models/user');
 const { renderRegister, registered, renderLogin, loggedIn, logOut } = require('../controllers/users');
+const {checkReturnTo} = require('../middleware');
 
 router.route('/register')
 .get( renderRegister)
@@ -21,7 +22,7 @@ router.route('/register')
 
 router.route('/login')
 .get(renderLogin )
-.post( passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), loggedIn);
+.post(checkReturnTo, passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), loggedIn);
 
 // router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
 //     let redirectUrl = '/restaurants'
